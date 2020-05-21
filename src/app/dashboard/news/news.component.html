@@ -1,0 +1,83 @@
+<div class="news-page-container m-4">
+  <h1 class="mb-4 w-100 text-center">Top news</h1>
+
+  <form [formGroup]="filterForm">
+
+    <div class="input-group">
+      <input
+        type="text"
+        aria-label="Name"
+        class="search-input form-control"
+        placeholder="Search by name"
+        formControlName="filterName"
+      />
+
+      <ng-select [items]="dashboardService.countries"
+                 formControlName="filterCountry"
+                 bindLabel="label"
+                 bindValue="value"
+                 placeholder="Choose country"
+                 class="search-select flex-fill ml-3"
+      >
+      </ng-select>
+
+      <ng-select [items]="dashboardService.categories"
+                 formControlName="filterCategory"
+                 bindLabel="label"
+                 bindValue="value"
+                 placeholder="Choose category"
+                 class="search-select flex-fill ml-3"
+      >
+      </ng-select>
+    </div>
+
+  </form>
+
+  <div class="news-content-table mt-3 mb-3">
+
+    <table class="table table-hover">
+      <thead>
+      <tr>
+        <th *ngFor="let column of tableColumns" scope="col">
+          {{ column?.title }}
+        </th>
+      </tr>
+      </thead>
+      <tbody *ngIf="!isDataLoading">
+      <tr *ngFor="let item of newsItems; let i = index">
+        <td class="w-25">
+          <img [src]="item?.urlToImage" [alt]="item?.urlToImage">
+        </td>
+        <td>{{ item?.title }}</td>
+        <td>
+          {{ item?.author || '-' }}
+        </td>
+        <td class="w-25">{{ item?.description }}</td>
+        <td>
+          {{ item?.publishedAt | date: 'dd.MM.yyyy' }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <div *ngIf="newsItems.length === 0"
+         class="mt-3 mb-3 w-100 text-center"
+    >
+      Haven't news to display. Try some different search
+    </div>
+
+    <pagination
+      class="mb-5"
+      previousText="&lsaquo;"
+      nextText="&rsaquo;"
+      firstText="&laquo;"
+      lastText="&raquo;"
+      [rotate]="pagination?.rotate"
+      [boundaryLinks]="pagination?.boundaryLinks"
+      [maxSize]="pagination?.maxSize"
+      [totalItems]="pagination?.totalItems"
+      (pageChanged)="pageChanged($event)"
+    ></pagination>
+  </div>
+
+</div>
